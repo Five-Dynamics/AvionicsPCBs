@@ -1,0 +1,120 @@
+name: KiCad PCB Workflow
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  check-kicad-files:
+    runs-on: ubuntu-latest
+    outputs:
+      files_present: ${{ steps.check_files.outputs.files_present }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Check for .kicad_pro and .kicad_sch files
+        id: check_files
+        run: |
+          # Search for files with the .kicad_pro extension
+          if [ $(find "${{ github.workspace }}" -name "*.kicad_pro" | wc -l) -eq 0 ]; then
+            echo "::error::No .kicad_pro files found!"
+            echo "kicad_pro_missing=true" >> $GITHUB_OUTPUT
+          else
+            echo ".kicad_pro files found."
+            echo "kicad_pro_missing=false" >> $GITHUB_OUTPUT
+          fi
+
+          # Search for files with the .kicad_sch extension
+          if [ $(find "${{ github.workspace }}" -name "*.kicad_sch" | wc -l) -eq 0 ]; then
+            echo "::error::No .kicad_sch files found!"
+            echo "kicad_sch_missing=true" >> $GITHUB_OUTPUT
+          else
+            echo ".kicad_sch files found."
+            echo "kicad_sch_missing=false" >> $GITHUB_OUTPUT
+          fi
+
+          # Set overall files_present output
+          if [ "$kicad_pro_missing" == "true" ] || [ "$kicad_sch_missing" == "true" ]; then
+            echo "files_present=false" >> $GITHUB_OUTPUT
+            exit 1
+          else
+            echo "files_present=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Comment on PR if files are missing
+        if: steps.check_files.outputs.files_present == 'false'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          REPO="${{ github.repository }}"
+          MESSAGE="⚠️ This PR is missing required KiCad files. Please ensure the following files are included:\n"
+          
+          if [ "$kicad_pro_missing" == "true" ]; then
+            MESSAGE+="- `.kicad_pro` files are missing.\n"
+          fi
+          if [ "$kicad_sch_missing" == "true" ]; then
+            MESSAGE+="- `.kicad_sch` files are missing.\n"
+          fi
+
+          MESSAGE+="\nPlease add the missing files and update the PR."
+
+          curl -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/${REPO}/issues/${PR_NUMBER}/comments \
+          -d '{"body": "'"${MESSAGE}"'"}'
+
+
+  pcb-checks:
+    runs-on: ubuntu-latest
+    needs: check-kicad-files
+    if: needs.check-kicad-files.outputs.files_present == 'true'
+    container:
+      image: ghcr.io/inti-cmnb/kicad_auto:latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Run ERC (Electrical Rule Check) for all .kicad_sch files
+        id: erc_check
+        run: |
+          ERC_FAILED=false
+          for sch_file in $(find "${{ github.workspace }}" -name "*.kicad_sch"); do
+            echo "Running ERC for $sch_file"
+            erc_output=$(kicad-cli sch erc "$sch_file" 2>&1)
+            erc_exit_code=$?
+            if [ $erc_exit_code -ne 0 ]; then
+              echo "::error::ERC failed for $sch_file"
+              echo "$erc_output"
+              ERC_FAILED=true
+            else
+              echo "ERC passed for $sch_file"
+            fi
+          done
+
+          if [ "$ERC_FAILED" == "true" ]; then
+            echo "erc_failed=true" >> $GITHUB_OUTPUT
+            exit 1
+          else
+            echo "erc_failed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Comment on PR if ERC fails
+        if: steps.erc_check.outputs.erc_failed == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          REPO="${{ github.repository }}"
+          MESSAGE="⚠️ The ERC (Electrical Rule Check) has failed. Please review the errors below and fix them:\n\n"
+          MESSAGE+="```\n"
+          MESSAGE+="${{ steps.erc_check.outputs.erc_output }}\n"
+          MESSAGE+="```\n\n"
+          MESSAGE+="For more details, check the workflow logs."
+
+          curl -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/${REPO}/issues/${PR_NUMBER}/comments \
+          -d '{"body": "'"${MESSAGE}"'"}'
