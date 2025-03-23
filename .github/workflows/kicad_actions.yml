@@ -2,8 +2,7 @@ name: KiCad PCB Workflow
 
 on:
   pull_request:
-    branches:
-      - main
+    types: [opened, edited, synchronize]
 
 jobs:
   check-kicad-files:
