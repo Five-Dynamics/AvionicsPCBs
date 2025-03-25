@@ -6,56 +6,7 @@ on:
       - main
 
 jobs:
-  check-pr-template:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Check PR description for mandatory sections
-        id: check_pr_template
-        env:
-          PR_BODY: ${{ github.event.pull_request.body }}
-        run: |
-          # Check for mandatory sections
-          if [[ -z "$PR_BODY" ]]; then
-            echo "::error::PR description is empty. Please fill out the PR template."
-            echo "template_check_failed=true" >> $GITHUB_OUTPUT
-            exit 1
-          fi
-
-          if ! echo "$PR_BODY" | grep -q "## Summary"; then
-            echo "::error::The '## Summary' section is missing in the PR description."
-            echo "template_check_failed=true" >> $GITHUB_OUTPUT
-            exit 1
-          fi
-
-          if ! echo "$PR_BODY" | grep -q "## Screenshots"; then
-            echo "::error::The '## Screenshots' section is missing in the PR description."
-            echo "template_check_failed=true" >> $GITHUB_OUTPUT
-            exit 1
-          fi
-
-          echo "PR template is complete."
-          echo "template_check_failed=false" >> $GITHUB_OUTPUT
-
-      - name: Comment on PR if template check fails
-        if: steps.check_pr_template.outputs.template_check_failed == 'true'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          PR_NUMBER="${{ github.event.pull_request.number }}"
-          REPO="${{ github.repository }}"
-          MESSAGE="⚠️ The PR template check has failed. Please ensure the following mandatory sections are included in your PR description:\n\n"
-          MESSAGE+="- **## 📋 Summary**\n"
-          MESSAGE+="- **## 📷 Screenshots**\n\n"
-          MESSAGE+="For more details, check the workflow logs."
-
-          curl -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
-          -H "Accept: application/vnd.github.v3+json" \
-          https://api.github.com/repos/${REPO}/issues/${PR_NUMBER}/comments \
-          -d '{"body": "'"${MESSAGE}"'"}'
-          
+  
   check-kicad-files:
     runs-on: ubuntu-latest
     outputs:
