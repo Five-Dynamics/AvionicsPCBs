@@ -2,7 +2,8 @@ name: KiCad PCB Workflow
 
 on:
   pull_request:
-    types: [opened, edited, synchronize]
+    branches:
+      - main
 
 jobs:
   check-pr-template:
@@ -23,14 +24,14 @@ jobs:
             exit 1
           fi
 
-          if ! echo "$PR_BODY" | grep -q "## 📋 Summary"; then
-            echo "::error::The '## 📋 Summary' section is missing in the PR description."
+          if ! echo "$PR_BODY" | grep -q "## Summary"; then
+            echo "::error::The '## Summary' section is missing in the PR description."
             echo "template_check_failed=true" >> $GITHUB_OUTPUT
             exit 1
           fi
 
-          if ! echo "$PR_BODY" | grep -q "## 📷 Screenshots"; then
-            echo "::error::The '## 📷 Screenshots' section is missing in the PR description."
+          if ! echo "$PR_BODY" | grep -q "## Screenshots"; then
+            echo "::error::The '## Screenshots' section is missing in the PR description."
             echo "template_check_failed=true" >> $GITHUB_OUTPUT
             exit 1
           fi
