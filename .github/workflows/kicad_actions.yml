@@ -1,5 +1,8 @@
 name: KiCad PCB Workflow
 
+permissions:
+  pull-requests: write
+  contents: read
 on:
   pull_request:
     branches:
@@ -21,52 +24,67 @@ jobs:
           # Search for files with the .kicad_pro extension
           if [ $(find "${{ github.workspace }}" -name "*.kicad_pro" | wc -l) -eq 0 ]; then
             echo "::error::No .kicad_pro files found!"
-            echo "kicad_pro_missing=true" >> $GITHUB_OUTPUT
+            kicad_pro_missing="true"
+            # Set the output variable to indicate missing files
+            echo "kicad_pro_missing=true" >> $GITHUB_ENV
           else
             echo ".kicad_pro files found."
-            echo "kicad_pro_missing=false" >> $GITHUB_OUTPUT
+            kicad_pro_missing="false"
+            echo "kicad_pro_missing=false" >> $GITHUB_ENV
           fi
 
           # Search for files with the .kicad_sch extension
           if [ $(find "${{ github.workspace }}" -name "*.kicad_sch" | wc -l) -eq 0 ]; then
             echo "::error::No .kicad_sch files found!"
-            echo "kicad_sch_missing=true" >> $GITHUB_OUTPUT
+            echo "kicad_sch_missing=true" >> $GITHUB_ENV
           else
             echo ".kicad_sch files found."
-            echo "kicad_sch_missing=false" >> $GITHUB_OUTPUT
+            echo "kicad_sch_missing=false" >> $GITHUB_ENV
           fi
 
-          # Set overall files_present output
+          echo "kicad_pro_missing=$kicad_pro_missing"
+          echo "kicad_sch_missing=$kicad_sch_missing"
+
+          # Set the output variable correctly
           if [ "$kicad_pro_missing" == "true" ] || [ "$kicad_sch_missing" == "true" ]; then
-            echo "files_present=false" >> $GITHUB_OUTPUT
-            exit 1
+            echo "files_present=false" >> "$GITHUB_ENV"
+            echo "files_present=false" >> "$GITHUB_OUTPUT"
           else
-            echo "files_present=true" >> $GITHUB_OUTPUT
+            echo "files_present=true" >> "$GITHUB_ENV"
+            echo "files_present=true" >> "$GITHUB_OUTPUT"
           fi
+          
 
       - name: Comment on PR if files are missing
         if: steps.check_files.outputs.files_present == 'false'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+          KICAD_PRO_MISSING: ${{ env.kicad_pro_missing }}
+          KICAD_SCH_MISSING: ${{ env.kicad_sch_missing }}
         run: |
-          PR_NUMBER="${{ github.event.pull_request.number }}"
-          REPO="${{ github.repository }}"
           MESSAGE="⚠️ This PR is missing required KiCad files. Please ensure the following files are included:\n"
           
-          if [ "$kicad_pro_missing" == "true" ]; then
-            MESSAGE+="- `.kicad_pro` files are missing.\n"
+
+          echo "KICAD_PRO_MISSING: $KICAD_PRO_MISSING"
+          echo "KICAD_SCH_MISSING: $KICAD_SCH_MISSING"
+
+          if [ "$KICAD_PRO_MISSING" == "true" ]; then
+            MESSAGE+="- .kicad_pro files are missing.\n"
           fi
-          if [ "$kicad_sch_missing" == "true" ]; then
-            MESSAGE+="- `.kicad_sch` files are missing.\n"
+          if [ "$KICAD_SCH_MISSING" == "true" ]; then
+            MESSAGE+="- .kicad_sch files are missing.\n"
           fi
 
           MESSAGE+="\nPlease add the missing files and update the PR."
-
+          
           curl -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
           -H "Accept: application/vnd.github.v3+json" \
           https://api.github.com/repos/${REPO}/issues/${PR_NUMBER}/comments \
           -d '{"body": "'"${MESSAGE}"'"}'
 
+          exit 1
 
   pcb-checks:
     runs-on: ubuntu-latest
