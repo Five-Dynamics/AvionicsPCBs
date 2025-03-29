@@ -27,7 +27,7 @@ jobs:
             }
 
       - name: Request Changes If PR Template is Incomplete
-        if: failure()
+        if: steps.check-pr.outcome == 'failure'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
