@@ -39,10 +39,13 @@ jobs:
           # Set overall files_present output
           if [ "$kicad_pro_missing" == "true" ] || [ "$kicad_sch_missing" == "true" ]; then
             echo "files_present=false" >> $GITHUB_OUTPUT
+            echo files_present=false
             exit 1
           else
             echo "files_present=true" >> $GITHUB_OUTPUT
+            echo files_present=true
           fi
+          
 
       - name: Comment on PR if files are missing
         if: steps.check_files.outputs.files_present == 'false'
