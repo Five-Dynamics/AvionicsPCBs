@@ -48,15 +48,17 @@ jobs:
         if: steps.check_files.outputs.files_present == 'false'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+          KICAD_PRO_MISSING: ${{ env.kicad_pro_missing }}
+          KICAD_SCH_MISSING: ${{ env.kicad_sch_missing }}
         run: |
-          PR_NUMBER="${{ github.event.pull_request.number }}"
-          REPO="${{ github.repository }}"
           MESSAGE="⚠️ This PR is missing required KiCad files. Please ensure the following files are included:\n"
           
-          if [ "$kicad_pro_missing" == "true" ]; then
+          if [ "$KICAD_PRO_MISSING" == "true" ]; then
             MESSAGE+="- `.kicad_pro` files are missing.\n"
           fi
-          if [ "$kicad_sch_missing" == "true" ]; then
+          if [ "$KICAD_SCH_MISSING" == "true" ]; then
             MESSAGE+="- `.kicad_sch` files are missing.\n"
           fi
 
@@ -66,7 +68,6 @@ jobs:
           -H "Accept: application/vnd.github.v3+json" \
           https://api.github.com/repos/${REPO}/issues/${PR_NUMBER}/comments \
           -d '{"body": "'"${MESSAGE}"'"}'
-
 
   pcb-checks:
     runs-on: ubuntu-latest
