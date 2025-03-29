@@ -49,6 +49,7 @@ jobs:
           if [ "$kicad_pro_missing" == "true" ] || [ "$kicad_sch_missing" == "true" ]; then
             echo "files_present=false" >> "$GITHUB_ENV"
             echo "files_present=false" >> "$GITHUB_OUTPUT"
+            core.setFailed("Required KiCad files are missing.")
           else
             echo "files_present=true" >> "$GITHUB_ENV"
             echo "files_present=true" >> "$GITHUB_OUTPUT"
@@ -78,6 +79,8 @@ jobs:
           fi
 
           MESSAGE+="\nPlease add the missing files and update the PR."
+
+        
 
           curl -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
           -H "Accept: application/vnd.github.v3+json" \
