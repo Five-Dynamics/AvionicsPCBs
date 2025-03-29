@@ -71,10 +71,10 @@ jobs:
           echo "KICAD_SCH_MISSING: $KICAD_SCH_MISSING"
 
           if [ "$KICAD_PRO_MISSING" == "true" ]; then
-            MESSAGE+="- `.kicad_pro` files are missing.\n"
+            MESSAGE+="- .kicad_pro files are missing.\n"
           fi
           if [ "$KICAD_SCH_MISSING" == "true" ]; then
-            MESSAGE+="- `.kicad_sch` files are missing.\n"
+            MESSAGE+="- .kicad_sch files are missing.\n"
           fi
 
           MESSAGE+="\nPlease add the missing files and update the PR."
