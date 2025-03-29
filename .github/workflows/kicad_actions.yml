@@ -49,7 +49,7 @@ jobs:
           if [ "$kicad_pro_missing" == "true" ] || [ "$kicad_sch_missing" == "true" ]; then
             echo "files_present=false" >> "$GITHUB_ENV"
             echo "files_present=false" >> "$GITHUB_OUTPUT"
-            core.setFailed("Required KiCad files are missing.")
+            core.setFailed(`Required KiCad files are missing.`)
           else
             echo "files_present=true" >> "$GITHUB_ENV"
             echo "files_present=true" >> "$GITHUB_OUTPUT"
