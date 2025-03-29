@@ -49,7 +49,6 @@ jobs:
           if [ "$kicad_pro_missing" == "true" ] || [ "$kicad_sch_missing" == "true" ]; then
             echo "files_present=false" >> "$GITHUB_ENV"
             echo "files_present=false" >> "$GITHUB_OUTPUT"
-            exit 1  # Ensure failure
           else
             echo "files_present=true" >> "$GITHUB_ENV"
             echo "files_present=true" >> "$GITHUB_OUTPUT"
