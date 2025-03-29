@@ -21,28 +21,25 @@ jobs:
       - name: Check for .kicad_pro and .kicad_sch files
         id: check_files
         run: |
-          kicad_pro_missing="true"
-          kicad_sch_missing="true"
-
           # Search for files with the .kicad_pro extension
           if [ $(find "${{ github.workspace }}" -name "*.kicad_pro" | wc -l) -eq 0 ]; then
             echo "::error::No .kicad_pro files found!"
             kicad_pro_missing="true"
             # Set the output variable to indicate missing files
-            echo "kicad_pro_missing=true" >> $GITHUB_OUTPUT
+            echo "kicad_pro_missing=true" >> $GITHUB_ENV
           else
             echo ".kicad_pro files found."
             kicad_pro_missing="false"
-            echo "kicad_pro_missing=false" >> $GITHUB_OUTPUT
+            echo "kicad_pro_missing=false" >> $GITHUB_ENV
           fi
 
           # Search for files with the .kicad_sch extension
           if [ $(find "${{ github.workspace }}" -name "*.kicad_sch" | wc -l) -eq 0 ]; then
             echo "::error::No .kicad_sch files found!"
-            echo "kicad_sch_missing=true" >> $GITHUB_OUTPUT
+            echo "kicad_sch_missing=true" >> $GITHUB_ENV
           else
             echo ".kicad_sch files found."
-            echo "kicad_sch_missing=false" >> $GITHUB_OUTPUT
+            echo "kicad_sch_missing=false" >> $GITHUB_ENV
           fi
 
           echo "kicad_pro_missing=$kicad_pro_missing"
@@ -72,7 +69,7 @@ jobs:
 
           echo "KICAD_PRO_MISSING: $KICAD_PRO_MISSING"
           echo "KICAD_SCH_MISSING: $KICAD_SCH_MISSING"
-          
+
           if [ "$KICAD_PRO_MISSING" == "true" ]; then
             MESSAGE+="- `.kicad_pro` files are missing.\n"
           fi
