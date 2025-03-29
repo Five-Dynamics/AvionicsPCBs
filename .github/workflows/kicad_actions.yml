@@ -40,7 +40,7 @@ jobs:
           echo "kicad_sch_missing=$kicad_sch_missing"
 
           # Set the output variable correctly
-          if [ "$kicad_pro_missing" = "true" ] || [ "$kicad_sch_missing" = "true" ]; then
+          if [ "$kicad_pro_missing" == "true" ] || [ "$kicad_sch_missing" == "true" ]; then
             echo "files_present=false" >> "$GITHUB_ENV"
             echo "files_present=false" >> "$GITHUB_OUTPUT"
             exit 1  # Ensure failure
