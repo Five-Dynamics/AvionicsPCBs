@@ -45,7 +45,7 @@ jobs:
           fi
 
       - name: Comment on PR if files are missing
-        if: steps.check_files.outputs.files_present == 'false'
+        if: steps.check_files.outputs.files_present == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
