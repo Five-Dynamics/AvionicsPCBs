@@ -18,6 +18,9 @@ jobs:
       - name: Check for .kicad_pro and .kicad_sch files
         id: check_files
         run: |
+          kicad_pro_missing="false"
+          kicad_sch_missing="false"
+          
           # Search for files with the .kicad_pro extension
           if [ $(find "${{ github.workspace }}" -name "*.kicad_pro" | wc -l) -eq 0 ]; then
             echo "::error::No .kicad_pro files found!"
