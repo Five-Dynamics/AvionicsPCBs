@@ -1,5 +1,8 @@
 name: KiCad PCB Workflow
 
+permissions:
+  pull-requests: write
+  contents: read
 on:
   pull_request:
     branches:
