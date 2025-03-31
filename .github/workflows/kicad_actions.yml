@@ -106,15 +106,20 @@ jobs:
       - name: Run ERC (Electrical Rule Check) for all .kicad_sch files
         id: erc_check
         run: |
+          set +e  # Disable 'exit on error' to avoid crashing on non-zero exit codes
+
+          export PATH="/usr/lib/kicad-nightly/bin:$PATH"
+
           ERC_FAILED=false
           ERC_OUTPUT=""
-          export PATH="/usr/lib/kicad-nightly/bin:$PATH"
+
           for sch_file in $(find "$GITHUB_WORKSPACE" -name "*.kicad_sch"); do
             echo "Running ERC for $sch_file"
             OUTPUT=$(kicad-cli sch erc "$sch_file" --exit-code 2>&1)
-            if [ $? -ne 0 ]; then
+            EXIT_CODE=$?
+            if [ "$EXIT_CODE" -ne 0 ]; then
               echo "::error::ERC failed for $sch_file"
-              ERC_OUTPUT+="\n[$sch_file]\n$OUTPUT\n"
+              ERC_OUTPUT="${ERC_OUTPUT}\n[$sch_file]\n$OUTPUT\n"
               ERC_FAILED=true
             else
               echo "✅ ERC passed for $sch_file"
@@ -124,9 +129,9 @@ jobs:
           echo -e "$ERC_OUTPUT" > erc_output.txt
 
           if [ "$ERC_FAILED" = "true" ]; then
-            echo "erc_failed=true" >> $GITHUB_OUTPUT
+            echo "erc_failed=true" >> "$GITHUB_OUTPUT"
           else
-            echo "erc_failed=false" >> $GITHUB_OUTPUT
+            echo "erc_failed=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Comment on PR if ERC fails
