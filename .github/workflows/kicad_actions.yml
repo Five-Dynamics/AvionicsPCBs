@@ -107,18 +107,23 @@ jobs:
         id: erc_check
         run: |
           ERC_FAILED=false
+          ERC_OUTPUT=""
           for sch_file in $(find "$GITHUB_WORKSPACE" -name "*.kicad_sch"); do
             echo "Running ERC for $sch_file"
-            if ! /usr/lib/kicad-nightly/bin/kicad-cli sch erc "$sch_file" --exit-code; then
+            OUTPUT=$(/usr/lib/kicad-nightly/bin/kicad-cli sch erc "$sch_file" --exit-code 2>&1)
+            if [ $? -ne 0 ]; then
+              echo "::error::ERC failed for $sch_file"
+              ERC_OUTPUT+="\n[$sch_file]\n$OUTPUT\n"
               ERC_FAILED=true
             else
-              echo "ERC passed for $sch_file"
+              echo "✅ ERC passed for $sch_file"
             fi
           done
 
-          if [ "$ERC_FAILED" == "true" ]; then
+          echo -e "$ERC_OUTPUT" > erc_output.txt
+
+          if [ "$ERC_FAILED" = "true" ]; then
             echo "erc_failed=true" >> $GITHUB_OUTPUT
-            
           else
             echo "erc_failed=false" >> $GITHUB_OUTPUT
           fi
@@ -130,15 +135,22 @@ jobs:
         run: |
           PR_NUMBER="${{ github.event.pull_request.number }}"
           REPO="${{ github.repository }}"
-          MESSAGE="⚠️ The ERC (Electrical Rule Check) has failed. Please review the errors below and fix them:\n\n"
-          MESSAGE+="```\n"
-          MESSAGE+="${{ steps.erc_check.outputs.erc_output }}\n"
-          MESSAGE+="```\n\n"
-          MESSAGE+="For more details, check the workflow logs."
-
+          RAW_OUTPUT=$(cat erc_output.txt)
+      
+          MESSAGE=$(cat <<EOF
+          ⚠️ **ERC (Electrical Rule Check) failed**. Please fix the following issues:
+        
+          \`\`\`
+          $RAW_OUTPUT
+          \`\`\`
+          
+          🛠️ For more details, see the logs in this workflow run.
+          EOF
+          )
+          
           curl -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
-          -H "Accept: application/vnd.github.v3+json" \
-          https://api.github.com/repos/${REPO}/issues/${PR_NUMBER}/comments \
-          -d '{"body": "'"${MESSAGE}"'"}'
-
+                -H "Accept: application/vnd.github.v3+json" \
+                https://api.github.com/repos/${REPO}/issues/${PR_NUMBER}/comments \
+                -d "$(jq -nc --arg body "$MESSAGE" '{"body": $body}')"
+      
           exit 1
