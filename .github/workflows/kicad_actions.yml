@@ -103,18 +103,13 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y kicad-nightly
       
-      - name: Locate kicad CLI binary (faster)
-        run: |
-          find /usr /opt -name "kicad*cli" 2>/dev/null || echo "Binary not found"
-          which kicad-cli || echo "kicad-cli not in PATH"
-      
       - name: Run ERC (Electrical Rule Check) for all .kicad_sch files
         id: erc_check
         run: |
           ERC_FAILED=false
           for sch_file in $(find "$GITHUB_WORKSPACE" -name "*.kicad_sch"); do
             echo "Running ERC for $sch_file"
-            if ! /usr/bin/kicad-nightly-cli sch erc "$sch_file" --exit-code; then
+            if ! /usr/lib/kicad-nightly/bin/kicad-cli sch erc "$sch_file" --exit-code; then
               ERC_FAILED=true
             else
               echo "ERC passed for $sch_file"
