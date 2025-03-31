@@ -109,6 +109,7 @@ jobs:
         id: erc_check
         shell: bash
         run: |
+          set +e
           ERC_FAILED=false
           ERC_OUTPUT=""
           for sch_file in $(find "$GITHUB_WORKSPACE" -name "*.kicad_sch"); do
