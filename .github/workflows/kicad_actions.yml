@@ -90,18 +90,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: check-kicad-files
     if: needs.check-kicad-files.outputs.files_present == 'true'
+    container:
+      image: kicad/kicad:8.0.5
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      
-      - name: Install KiCad 8
-        run: |
-          apt-get update
-          apt-get install -y software-properties-common wget
-          add-apt-repository --yes ppa:kicad/kicad-dev-nightly
-          apt-get update
-          apt-get install -y kicad-nightly
-          ln -s /usr/bin/kicad-nightly-cli /usr/local/bin/kicad-cli
       
       - name: Run ERC (Electrical Rule Check) for all .kicad_sch files
         id: erc_check
@@ -109,11 +102,7 @@ jobs:
           ERC_FAILED=false
           for sch_file in $(find "$GITHUB_WORKSPACE" -name "*.kicad_sch"); do
             echo "Running ERC for $sch_file"
-            erc_output=$(kicad-cli sch erc "$sch_file" 2>&1)
-            erc_exit_code=$?
-            if [ "$erc_exit_code" -ne 0 ]; then
-              echo "::error::ERC failed for $sch_file"
-              echo "$erc_output"
+            if ! kicad-cli sch erc "$sch_file" --exit-code; then
               ERC_FAILED=true
             else
               echo "ERC passed for $sch_file"
