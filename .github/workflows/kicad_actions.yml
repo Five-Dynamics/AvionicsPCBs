@@ -107,6 +107,7 @@ jobs:
       
       - name: Run ERC (Electrical Rule Check) for all .kicad_sch files
         id: erc_check
+        shell: bash
         run: |
           ERC_FAILED=false
           ERC_OUTPUT=""
