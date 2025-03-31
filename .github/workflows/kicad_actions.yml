@@ -103,9 +103,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y kicad-nightly
       
-      - name: Check for kicad CLI binary
+      - name: Locate kicad CLI binary (faster)
         run: |
-          find / -name "kicad*cli" 2>/dev/null
+          find /usr /opt -name "kicad*cli" 2>/dev/null || echo "Binary not found"
           which kicad-cli || echo "kicad-cli not in PATH"
       
       - name: Run ERC (Electrical Rule Check) for all .kicad_sch files
