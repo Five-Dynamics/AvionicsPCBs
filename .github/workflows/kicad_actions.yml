@@ -113,9 +113,10 @@ jobs:
         run: |
           ERC_FAILED=false
           ERC_OUTPUT=""
+          export PATH="/usr/lib/kicad-nightly/bin:$PATH"
           for sch_file in $(find "$GITHUB_WORKSPACE" -name "*.kicad_sch"); do
             echo "Running ERC for $sch_file"
-            OUTPUT=$(/usr/lib/kicad-nightly/bin/kicad-cli sch erc "$sch_file" --exit-code 2>&1)
+            OUTPUT=$(kicad-cli sch erc "$sch_file" --exit-code 2>&1)
             if [ $? -ne 0 ]; then
               echo "::error::ERC failed for $sch_file"
               ERC_OUTPUT+="\n[$sch_file]\n$OUTPUT\n"
