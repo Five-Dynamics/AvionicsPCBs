@@ -94,11 +94,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       
-      - name: Install KiCad CLI
+      - name: Install KiCad 8
         run: |
-          sudo add-apt-repository --yes ppa:kicad/kicad-8.0-releases
-          sudo apt-get update
-          sudo apt-get install -y kicad kicad-cli
+          apt-get update
+          apt-get install -y software-properties-common wget
+          add-apt-repository --yes ppa:kicad/kicad-dev-nightly
+          apt-get update
+          apt-get install -y kicad-nightly
+          ln -s /usr/bin/kicad-nightly-cli /usr/local/bin/kicad-cli
       
       - name: Run ERC (Electrical Rule Check) for all .kicad_sch files
         id: erc_check
