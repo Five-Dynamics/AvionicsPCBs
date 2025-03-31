@@ -100,11 +100,11 @@ jobs:
         id: erc_check
         run: |
           ERC_FAILED=false
-          for sch_file in $(find "${{ github.workspace }}" -name "*.kicad_sch"); do
+          for sch_file in $(find "$GITHUB_WORKSPACE" -name "*.kicad_sch"); do
             echo "Running ERC for $sch_file"
             erc_output=$(kicad-cli sch erc "$sch_file" 2>&1)
             erc_exit_code=$?
-            if [ $erc_exit_code -ne 0 ]; then
+            if [ "$erc_exit_code" -ne 0 ]; then
               echo "::error::ERC failed for $sch_file"
               echo "$erc_output"
               ERC_FAILED=true
