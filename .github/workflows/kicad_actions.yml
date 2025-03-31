@@ -102,6 +102,16 @@ jobs:
           sudo add-apt-repository --yes ppa:kicad/kicad-dev-nightly
           sudo apt-get update
           sudo apt-get install -y kicad-nightly
+
+      - name: List KiCad libraries
+        run: |
+          ls -lh /usr/lib/kicad-nightly/lib/libkicommon*
+
+      - name: Check CLI and linked libraries
+        run: |
+          which kicad-cli || echo "Not in PATH"
+          file /usr/lib/kicad-nightly/bin/kicad-cli
+          ldd /usr/lib/kicad-nightly/bin/kicad-cli || echo "ldd failed"
       
       - name: Run ERC (Electrical Rule Check) for all .kicad_sch files
         id: erc_check
