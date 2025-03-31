@@ -90,11 +90,17 @@ jobs:
     runs-on: ubuntu-latest
     needs: check-kicad-files
     if: needs.check-kicad-files.outputs.files_present == 'true'
-    container:
-      image: kicad/kicad:8.0.5
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+
+      - name: Install KiCad 8 CLI
+        run: |
+          sudo add-apt-repository --yes ppa:kicad/kicad-dev-nightly
+          sudo apt-get update
+          sudo apt-get install -y kicad-nightly
+          sudo ln -s /usr/bin/kicad-nightly-cli /usr/local/bin/kicad-cli
       
       - name: Run ERC (Electrical Rule Check) for all .kicad_sch files
         id: erc_check
