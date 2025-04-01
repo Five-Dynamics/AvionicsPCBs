@@ -114,10 +114,10 @@ Name: UA78L08
 
 | **SPI**  | **Device**     | **MOSI** | **MISO** | **CLK** | **CS**  |
 |----------|--------------|---------|---------|------|------|
-| **SPI1** | GPS         | PA7     | PA6     | PA5  | ?    |
-| **SPI2** | IMU2        | PC1     | PC2_C   | PB10 | ?    |
-| **SPI3** | Barometer   | PB2     | PC11    | PC10 | ?    |
-| **SPI4** | Memory Flash | PE6     | PE5     | PE2  | ?    |
-| **SPI5** | IMU1        | PF9     | PF8     | PF7  | ?    |
-| **SPI6** | Radio       | PG14    | PG12    | PG13 | ?    |
+| **SPI1** | GPS         | PA7     | PA6     | PA5  | PA4    |
+| **SPI2** | IMU2        | PC1     | PC2_C   | PB10 | PC3_C    |
+| **SPI3** | Barometer   | PB2     | PC11    | PC10 | PC12  |
+| **SPI4** | Memory Flash | PE6     | PE5     | PE2  | PE4    |
+| **SPI5** | IMU1        | PF9     | PF8     | PF7  | PF6    |
+| **SPI6** | Radio       | PG14    | PG12    | PG13 | PG11    |
 ##
