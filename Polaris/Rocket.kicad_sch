@@ -10224,7 +10224,7 @@
 		(uuid "890c3d4a-e4db-44dc-b950-398840f5b688")
 	)
 	(junction
-		(at 93.98 313.69)
+		(at 132.08 283.21)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "8b67fdbe-cbc4-4b29-aa36-d3a514cf4d45")
@@ -10632,7 +10632,7 @@
 		(uuid "38cf9d47-86e8-438a-b2e4-bf38a86541cc")
 	)
 	(no_connect
-		(at 81.28 303.53)
+		(at 119.38 273.05)
 		(uuid "3b2e5afe-f87d-4aaf-bbdd-020767822aad")
 	)
 	(no_connect
@@ -10656,7 +10656,7 @@
 		(uuid "47633e2d-962a-4856-933d-ecaf1988e70c")
 	)
 	(no_connect
-		(at 106.68 295.91)
+		(at 144.78 265.43)
 		(uuid "47bb8b90-7fb2-4319-b41b-f0fe72fbdf5c")
 	)
 	(no_connect
@@ -10768,7 +10768,7 @@
 		(uuid "774caa1b-2849-4d42-9471-62eb4f8cf224")
 	)
 	(no_connect
-		(at 106.68 303.53)
+		(at 144.78 273.05)
 		(uuid "775882be-c6d0-4cb5-9028-e3e64c55a3bf")
 	)
 	(no_connect
@@ -10940,7 +10940,7 @@
 		(uuid "b39b3bd7-cb1e-4b8d-a62e-a2dbb2b93c3f")
 	)
 	(no_connect
-		(at 106.68 298.45)
+		(at 144.78 267.97)
 		(uuid "b76bcf4a-50de-4391-8b8e-3cae7e0bf6a9")
 	)
 	(no_connect
@@ -10956,11 +10956,11 @@
 		(uuid "baae5e4b-accb-4097-a401-2fe383526e5a")
 	)
 	(no_connect
-		(at 106.68 300.99)
+		(at 144.78 270.51)
 		(uuid "bc259398-3f12-4860-8797-7b020ae484e6")
 	)
 	(no_connect
-		(at 106.68 306.07)
+		(at 144.78 275.59)
 		(uuid "bef4958a-360e-4d10-9925-4ea8bffd031c")
 	)
 	(no_connect
@@ -11024,7 +11024,7 @@
 		(uuid "cde49935-9b9f-40ae-a702-e79dca20cf89")
 	)
 	(no_connect
-		(at 106.68 290.83)
+		(at 144.78 260.35)
 		(uuid "d20f233b-fbbd-48f1-836a-ca46d51752c4")
 	)
 	(no_connect
@@ -11052,7 +11052,7 @@
 		(uuid "db1f632b-e0f4-436d-9495-7dd3a812a3ad")
 	)
 	(no_connect
-		(at 106.68 308.61)
+		(at 144.78 278.13)
 		(uuid "db78b58b-092a-49f5-b5bb-7f4fef1de861")
 	)
 	(no_connect
@@ -11447,7 +11447,7 @@
 	)
 	(wire
 		(pts
-			(xy 71.12 295.91) (xy 81.28 295.91)
+			(xy 109.22 265.43) (xy 119.38 265.43)
 		)
 		(stroke
 			(width 0)
@@ -11657,7 +11657,7 @@
 	)
 	(wire
 		(pts
-			(xy 71.12 293.37) (xy 81.28 293.37)
+			(xy 109.22 262.89) (xy 119.38 262.89)
 		)
 		(stroke
 			(width 0)
@@ -12417,7 +12417,7 @@
 	)
 	(wire
 		(pts
-			(xy 93.98 313.69) (xy 93.98 316.23)
+			(xy 132.08 283.21) (xy 132.08 285.75)
 		)
 		(stroke
 			(width 0)
@@ -12687,7 +12687,7 @@
 	)
 	(wire
 		(pts
-			(xy 71.12 298.45) (xy 81.28 298.45)
+			(xy 109.22 267.97) (xy 119.38 267.97)
 		)
 		(stroke
 			(width 0)
@@ -12807,7 +12807,7 @@
 	)
 	(wire
 		(pts
-			(xy 71.12 290.83) (xy 81.28 290.83)
+			(xy 109.22 260.35) (xy 119.38 260.35)
 		)
 		(stroke
 			(width 0)
@@ -13327,7 +13327,7 @@
 	)
 	(wire
 		(pts
-			(xy 91.44 313.69) (xy 93.98 313.69)
+			(xy 129.54 283.21) (xy 132.08 283.21)
 		)
 		(stroke
 			(width 0)
@@ -13407,7 +13407,7 @@
 	)
 	(wire
 		(pts
-			(xy 93.98 313.69) (xy 96.52 313.69)
+			(xy 132.08 283.21) (xy 134.62 283.21)
 		)
 		(stroke
 			(width 0)
@@ -14192,7 +14192,7 @@
 		(uuid "32b0dd79-f150-45d2-a1b3-836a26f86f48")
 	)
 	(label "Radio_CLK"
-		(at 71.12 290.83 0)
+		(at 109.22 260.35 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -14280,7 +14280,7 @@
 		(uuid "4ac1b724-a2e6-49d3-82da-69c3af4a06f8")
 	)
 	(label "Radio_MOSI"
-		(at 71.12 293.37 0)
+		(at 109.22 262.89 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -14302,7 +14302,7 @@
 		(uuid "51001d16-ac71-4e7f-91a3-67a4234f4ae0")
 	)
 	(label "Radio_CS"
-		(at 71.12 298.45 0)
+		(at 109.22 267.97 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -14709,7 +14709,7 @@
 		(uuid "cd32a2e8-cfee-4c9c-8957-363d01e7386d")
 	)
 	(label "Radio_MISO"
-		(at 71.12 295.91 0)
+		(at 109.22 265.43 0)
 		(fields_autoplaced yes)
 		(effects
 			(font
@@ -16543,7 +16543,7 @@
 	)
 	(symbol
 		(lib_id "RF_Module:RFM69HCW")
-		(at 93.98 298.45 0)
+		(at 132.08 267.97 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -16552,7 +16552,7 @@
 		(fields_autoplaced yes)
 		(uuid "4ad19240-b1e4-4abc-9c28-409a484905f8")
 		(property "Reference" "U6"
-			(at 96.1741 283.21 0)
+			(at 134.2741 252.73 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16561,7 +16561,7 @@
 			)
 		)
 		(property "Value" "RFM69HCW"
-			(at 96.1741 285.75 0)
+			(at 134.2741 255.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16570,7 +16570,7 @@
 			)
 		)
 		(property "Footprint" "RF_Module:HOPERF_RFM9XW_SMD"
-			(at 10.16 256.54 0)
+			(at 48.26 226.06 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16579,7 +16579,7 @@
 			)
 		)
 		(property "Datasheet" "https://www.hoperf.com/data/upload/portal/20181127/5bfcb8284d838.pdf"
-			(at 10.16 256.54 0)
+			(at 48.26 226.06 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -16588,7 +16588,7 @@
 			)
 		)
 		(property "Description" "Low power ISM Radio Transceiver Module, SPI interface, AES encryption, 434 or 915 MHz, up to 100mW, up to 300 kb/s, SMD-16, DIP-16"
-			(at 93.98 298.45 0)
+			(at 132.08 267.97 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17065,7 +17065,7 @@
 	)
 	(symbol
 		(lib_id "power:VCC")
-		(at 93.98 285.75 0)
+		(at 132.08 255.27 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -17074,7 +17074,7 @@
 		(fields_autoplaced yes)
 		(uuid "67c879a5-4897-4d43-9465-c7cc91ec90f1")
 		(property "Reference" "#PWR034"
-			(at 93.98 289.56 0)
+			(at 132.08 259.08 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17083,7 +17083,7 @@
 			)
 		)
 		(property "Value" "VDD"
-			(at 93.98 280.67 0)
+			(at 132.08 250.19 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17091,7 +17091,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 93.98 285.75 0)
+			(at 132.08 255.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17100,7 +17100,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 93.98 285.75 0)
+			(at 132.08 255.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -17109,7 +17109,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"VCC\""
-			(at 93.98 285.75 0)
+			(at 132.08 255.27 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20464,7 +20464,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 93.98 316.23 0)
+		(at 132.08 285.75 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -20473,7 +20473,7 @@
 		(fields_autoplaced yes)
 		(uuid "ba6114d1-dbf0-4346-958d-6cc38bf2467d")
 		(property "Reference" "#PWR033"
-			(at 93.98 322.58 0)
+			(at 132.08 292.1 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20482,7 +20482,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 93.98 321.31 0)
+			(at 132.08 290.83 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20490,7 +20490,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 93.98 316.23 0)
+			(at 132.08 285.75 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20499,7 +20499,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 93.98 316.23 0)
+			(at 132.08 285.75 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -20508,7 +20508,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 93.98 316.23 0)
+			(at 132.08 285.75 0)
 			(effects
 				(font
 					(size 1.27 1.27)
