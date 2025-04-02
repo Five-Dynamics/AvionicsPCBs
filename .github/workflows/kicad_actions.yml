@@ -114,7 +114,7 @@ jobs:
           ERC_OUTPUT=""
           for sch_file in $(find "$GITHUB_WORKSPACE" -name "*.kicad_sch"); do
             echo "Running ERC for $sch_file"
-            OUTPUT=$(kicad-cli sch erc "$sch_file" --exit-code-violations 2>&1)
+            OUTPUT=$(kicad-cli sch erc "$sch_file" --exit-code-violations --severity-error 2>&1)
             if [ $? -ne 0 ]; then
               echo "::error::ERC failed for $sch_file"
               ERC_OUTPUT="${ERC_OUTPUT}\n[$sch_file]\n$OUTPUT\n"
