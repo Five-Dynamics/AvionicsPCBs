@@ -91,34 +91,50 @@ jobs:
     needs: check-kicad-files
     if: needs.check-kicad-files.outputs.files_present == 'true'
     container:
-      image: ghcr.io/inti-cmnb/kicad_auto:latest
+      image: ghcr.io/inti-cmnb/kicad8_auto_full:latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+
+      # - name: Install KiCad 8 (Nightly)
+      #   run: |
+      #     sudo apt-get update
+      #     sudo apt-get install -y software-properties-common
+      #     sudo add-apt-repository --yes ppa:kicad/kicad-dev-nightly
+      #     sudo apt-get update
+      #     sudo apt-get install -y kicad-nightly
       
       - name: Run ERC (Electrical Rule Check) for all .kicad_sch files
         id: erc_check
+        shell: bash
         run: |
+          set +e
           ERC_FAILED=false
-          for sch_file in $(find "${{ github.workspace }}" -name "*.kicad_sch"); do
+          ERC_OUTPUT=""
+          for sch_file in $(find "$GITHUB_WORKSPACE" -name "*.kicad_sch"); do
             echo "Running ERC for $sch_file"
-            erc_output=$(kicad-cli sch erc "$sch_file" 2>&1)
-            erc_exit_code=$?
-            if [ $erc_exit_code -ne 0 ]; then
+            OUTPUT=$(kicad-cli sch erc "$sch_file" --exit-code-violations 2>&1)
+            if [ $? -ne 0 ]; then
               echo "::error::ERC failed for $sch_file"
-              echo "$erc_output"
+              ERC_OUTPUT="${ERC_OUTPUT}\n[$sch_file]\n$OUTPUT\n"
               ERC_FAILED=true
             else
-              echo "ERC passed for $sch_file"
+              echo "✅ ERC passed for $sch_file"
             fi
           done
 
-          if [ "$ERC_FAILED" == "true" ]; then
-            echo "erc_failed=true" >> $GITHUB_OUTPUT
-            exit 1
+          echo -e "$ERC_OUTPUT" > erc_output.txt
+
+          if [ "$ERC_FAILED" = "true" ]; then
+            echo "erc_failed=true" >> "$GITHUB_OUTPUT"
           else
-            echo "erc_failed=false" >> $GITHUB_OUTPUT
+            echo "erc_failed=false" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: Install jq
+        run: |
+          apt-get update && apt-get install -y jq
 
       - name: Comment on PR if ERC fails
         if: steps.erc_check.outputs.erc_failed == 'true'
@@ -127,13 +143,22 @@ jobs:
         run: |
           PR_NUMBER="${{ github.event.pull_request.number }}"
           REPO="${{ github.repository }}"
-          MESSAGE="⚠️ The ERC (Electrical Rule Check) has failed. Please review the errors below and fix them:\n\n"
-          MESSAGE+="```\n"
-          MESSAGE+="${{ steps.erc_check.outputs.erc_output }}\n"
-          MESSAGE+="```\n\n"
-          MESSAGE+="For more details, check the workflow logs."
-
+          RAW_OUTPUT=$(cat erc_output.txt)
+      
+          MESSAGE=$(cat <<EOF
+          ⚠️ **ERC (Electrical Rule Check) failed**. Please fix the following issues:
+        
+          \`\`\`
+          $RAW_OUTPUT
+          \`\`\`
+          
+          🛠️ For more details, see the logs in this workflow run.
+          EOF
+          )
+          
           curl -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
-          -H "Accept: application/vnd.github.v3+json" \
-          https://api.github.com/repos/${REPO}/issues/${PR_NUMBER}/comments \
-          -d '{"body": "'"${MESSAGE}"'"}'
+                -H "Accept: application/vnd.github.v3+json" \
+                https://api.github.com/repos/${REPO}/issues/${PR_NUMBER}/comments \
+                -d "$(jq -nc --arg body "$MESSAGE" '{"body": $body}')"
+      
+          exit 1
