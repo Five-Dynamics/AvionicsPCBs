@@ -155,6 +155,11 @@ jobs:
           🛠️ For more details, see the logs in this workflow run.
           EOF
           )
+
+          if [ -f Rocket.rpt ]; then
+            echo "--- ERC Report Output ---"
+            cat Rocket.rpt
+          fi
           
           curl -X POST -H "Authorization: token ${GITHUB_TOKEN}" \
                 -H "Accept: application/vnd.github.v3+json" \
