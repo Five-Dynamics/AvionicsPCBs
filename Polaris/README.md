@@ -121,3 +121,6 @@ Name: UA78L08
 | **SPI5** | IMU1        | PF9     | PF8     | PF7  | PF6    |
 | **SPI6** | Radio       | PG14    | PG12    | PG13 | PG11    |
 ##
+
+![Pinout1](Pinout_1.png)
+![Pinout2](Pinout_2.png)
